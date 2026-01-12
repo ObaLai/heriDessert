@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ch6 切版練習 - 02</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mycss.css">
+    <style>
+        .bg-cover {
+            background-position: center center;
+            background-size: cover;
+        }
+
+        .box01 {
+            height: 160px;
+            background-image: url(images/library01.avif);
+        }
+
+        .box02 {
+            height: 100px;
+            margin-top: 5px;
+            line-height: 100px;
+            background-color: #b97070;
+        }
+
+        .box03 {
+            border: 2px solid var(--color01);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        @media screen and (min-width: 768px) {
+            .box02 {
+                width: 150px;
+                height: 150px;
+                line-height: 150px;
+
+            }
+        }
+
+        @media screen and (min-width: 992px) {
+            .box02 {
+                width: 200px;
+                height: 200px;
+                line-height: 200px;
+                border-radius: 50%;
+
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+            .box02 {
+                width: 240px;
+                height: 240px;
+                line-height: 240px;
+                border-radius: 50%;
+
+            }
+        }
+
+        .box02:hover {
+            background-color: var(--color02);
+            color: var(--textcolor01);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-none d-sm-block">
+                <div class="box01 bg-info bg-cover"></div>
+            </div>
+        </div>
+
+        <div class="row mt-2 mb-2">
+            <div class="col-sm-6 col-md-3">
+                <div class="box02 h1 fw-900 text-center bg-success">
+                    選單01
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="box02 h1 fw-900 text-center">
+                    選單02
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="box02 h1 fw-900 text-center">
+                    選單03
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="box02 h1 fw-900 text-center">
+                    選單04
+                </div>
+            </div>
+        </div>
+        <div class="row" id="myshowdata">
+            <div class="col-md-6 col-lg-4">
+                <div class="box03">
+                    <img src="images/run01.jpeg" class="img-fluid img-thumbnail" alt="">
+                    <div class="h4 text-center fw-900">旅遊景點介紹</div>
+                    <p>超市模型深深主角肯定機制，存在二級友情，好好傳真，下載體系一台社會主義大全情節，所謂眼裡他也一流品質中有，密碼特點那些，味道確認事故導航高級我覺得關係，多麼想像上來自從請點擊又有不能攝影熟悉人力及時，工人無限隊員保證未來，決定寫真時間處於界面又有，瘋狂價。
+                    </p>
+
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="box03">
+                    <img src="images/run01.jpeg" class="img-fluid img-thumbnail" alt="">
+                    <div class="h4 text-center fw-900">旅遊景點介紹</div>
+                    <p>超市模型深深主角肯定機制，存在二級友情，好好傳真，下載體系一台社會主義大全情節，所謂眼裡他也一流品質中有，密碼特點那些，味道確認事故導航高級我覺得關係，多麼想像上來自從請點擊又有不能攝影熟悉人力及時，工人無限隊員保證未來，決定寫真時間處於界面又有，瘋狂價。
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="box03">
+                    <img src="images/run01.jpeg" class="img-fluid img-thumbnail" alt="">
+                    <div class="h4 text-center fw-900">旅遊景點介紹</div>
+                    <p>超市模型深深主角肯定機制，存在二級友情，好好傳真，下載體系一台社會主義大全情節，所謂眼裡他也一流品質中有，密碼特點那些，味道確認事故導航高級我覺得關係，多麼想像上來自從請點擊又有不能攝影熟悉人力及時，工人無限隊員保證未來，決定寫真時間處於界面又有，瘋狂價。
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="box03">
+                    <img src="images/run01.jpeg" class="img-fluid img-thumbnail" alt="">
+                    <div class="h4 text-center fw-900">旅遊景點介紹</div>
+                    <p>超市模型深深主角肯定機制，存在二級友情，好好傳真，下載體系一台社會主義大全情節，所謂眼裡他也一流品質中有，密碼特點那些，味道確認事故導航高級我覺得關係，多麼想像上來自從請點擊又有不能攝影熟悉人力及時，工人無限隊員保證未來，決定寫真時間處於界面又有，瘋狂價。
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="box03">
+                    <img src="images/run01.jpeg" class="img-fluid img-thumbnail" alt="">
+                    <div class="h4 text-center fw-900">旅遊景點介紹</div>
+                    <p>超市模型深深主角肯定機制，存在二級友情，好好傳真，下載體系一台社會主義大全情節，所謂眼裡他也一流品質中有，密碼特點那些，味道確認事故導航高級我覺得關係，多麼想像上來自從請點擊又有不能攝影熟悉人力及時，工人無限隊員保證未來，決定寫真時間處於界面又有，瘋狂價。
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="box03">
+                    <img src="images/run01.jpeg" class="img-fluid img-thumbnail" alt="">
+                    <div class="h4 text-center fw-900">旅遊景點介紹</div>
+                    <p>超市模型深深主角肯定機制，存在二級友情，好好傳真，下載體系一台社會主義大全情節，所謂眼裡他也一流品質中有，密碼特點那些，味道確認事故導航高級我覺得關係，多麼想像上來自從請點擊又有不能攝影熟悉人力及時，工人無限隊員保證未來，決定寫真時間處於界面又有，瘋狂價。
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-3 d-none d-md-block bg-01 box01">
+            </div>
+        </div>
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(function () {
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "js/json/TravelFood.json",
+                    dataType: "json",
+                    success: showdata,
+                    error: function () {
+                        console.log("Connection Failed");
+                    }
+                }
+            );
+        });
+        function showdata(data) {
+            console.log(data);
+
+
+            $("#myshowdata").empty();
+            data.forEach(function (item) {
+                let strHTML = `<div class="col-md-6 col-lg-4">
+                               <div class="box03">
+                               <img src="${item.PicURL}" class="img-fluid img-thumbnail" alt="">
+                               <div class="h4 text-center fw-900">${item.Name}</div>
+                               <p>${item.HostWords}</p>
+
+                           </div>
+                      </div>`;
+                $("#myshowdata").append(strHTML);
+
+            });
+        }
+
+    </script>
+
+</html>

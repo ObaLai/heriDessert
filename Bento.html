@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客製化便當點餐系統</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mycss.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <style>
+        /* 整體背景 & 字體 */
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top,
+                    #f9fafb 0,
+                    #e5edf7 40%,
+                    #d1e9ff 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+        }
+
+        .app-title {
+            letter-spacing: 0.18em;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: .9rem;
+            color: #6b7280;
+        }
+
+        /* 卡片樣式 */
+        .order-card,
+        .summary-card {
+            border-radius: 22px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .order-card .card-header {
+            background: linear-gradient(135deg, #111827, #1f2937);
+        }
+
+        .summary-card .card-header {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+        }
+
+        .card-header {
+            border-bottom: none;
+            padding: 0.9rem 1.25rem;
+        }
+
+        .card-header .title-main {
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.2);
+        }
+
+        /* Label 小標題 */
+        .section-label {
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .16em;
+            color: #9ca3af;
+        }
+
+        .h5 span[fw-900],
+        .h4 span[fw-900] {
+            font-weight: 700;
+        }
+
+        /* 表單小調整 */
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 0.75rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 .18rem rgba(59, 130, 246, .25);
+        }
+
+        .form-check-label {
+            font-size: .9rem;
+        }
+
+        /* Range 樣式 */
+        .form-range {
+            accent-color: #2563eb;
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background-color: #2563eb;
+        }
+
+        .range-value {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        /* 按鈕區 */
+        .btn-primary {
+            border-radius: 999px;
+            padding-inline: 1.6rem;
+        }
+
+        .btn-secondary {
+            border-radius: 999px;
+        }
+
+        @media (max-width: 768px) {
+            .btn-bar {
+                display: flex;
+                gap: .5rem;
+                justify-content: flex-end;
+            }
+
+            .btn-bar .btn {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+     <section id="s02">
+        <nav class="navbar navbar-expand-lg bg-danger navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="images/heri4.png" class="nav-icon" alt="">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse h4" id="navbarSupportedContent">
+                    <!-- 左邊選單 -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#s04">關於禾日</a>
+                        </li>
+
+                        <!-- dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                熱銷手工甜點
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="#">巴斯克優格蛋糕</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">手工奶酪軟餅乾</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">綜合水果杯子蛋糕</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">抹茶巧克力杯子蛋糕</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">厚奶茶杯子蛋糕</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- 登入and註冊 -->
+                    <div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-01 h3 me-2 d-none" id="s02-member-span">會員:<span
+                                    class="text-03 fw-900 h2">xxx</span></span>
+
+                            <button class="btn btn-secondary d-none" id="s02-logout-btn">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>會員登出/Sing Out
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
+
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <div class="app-title">我家小吃部</div>
+                <div class="subtitle">客製化便當點餐系統</div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-start g-4">
+            <!-- 左：便當點餐表單 -->
+            <div class="col-md-5 col-xxl-4">
+                <div class="card order-card shadow-soft">
+                    <div class="card-header d-flex justify-content-between align-items-center text-white">
+                        <div class="title-main fw-900">便當客製設定</div>
+                        <small class="text-gray-300">Step 1 · 填寫表單</small>
+                    </div>
+                    <div class="card-body">
+                        <!-- 1. 菜名 -->
+                        <div class="section-label mb-1">Basic</div>
+                        <div class="mb-3">
+                            <label class="form-label">菜名（2~10 字）</label>
+                            <input type="text" class="form-control is-invalid"
+                                placeholder="例：雞腿便當" id="dish_name" list="dishlist">
+                            <datalist id="dishlist">
+                                <option value="滷肉飯"></option>
+                                <option value="雞腿便當"></option>
+                                <option value="燒肉便當"></option>
+                                <option value="香腸便當"></option>
+                            </datalist>
+                            <div class="valid-feedback">菜名長度符合規定。</div>
+                            <div class="invalid-feedback">菜名需為 2~10 個字。</div>
+                        </div>
+
+                        <!-- 2. 價格 -->
+                        <div class="mb-3">
+                            <label class="form-label">價格（60 ~ 200 元）</label>
+                            <input type="number" min="60" max="200"
+                                class="form-control is-invalid"
+                                placeholder="請輸入價格" id="price">
+                            <div class="valid-feedback">價格符合規定。</div>
+                            <div class="invalid-feedback">價格需介於 60 ~ 200 之間，不可為 0 或空白。</div>
+                        </div>
+
+                        <!-- 3. 主食 -->
+                        <div class="mb-3">
+                            <label class="form-label">主食選擇</label>
+                            <select class="form-select is-invalid" id="main_food">
+                                <option value="" selected disabled>請選擇主食</option>
+                                <option value="白飯">白飯</option>
+                                <option value="糙米飯">糙米飯</option>
+                                <option value="麵">麵</option>
+                            </select>
+                            <div class="valid-feedback">已選擇主食。</div>
+                            <div class="invalid-feedback">請選擇一種主食。</div>
+                        </div>
+
+                        <!-- 4. 分量 -->
+                        <div class="mb-4">
+                            <label class="form-label d-flex justify-content-between">
+                                <span>分量（0 ~ 100）</span>
+                                <span>目前：<span id="amount_text" class="range-value">50</span>%</span>
+                            </label>
+                            <input type="range" class="form-range" id="amount_range" min="0" max="100" value="50">
+                        </div>
+
+                        <!-- 5. 加購配料 -->
+                        <div class="section-label mb-1">Options</div>
+                        <div class="mb-3">
+                            <div class="h6 mb-2">加購配料（複選）</div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" name="extras" value="滷蛋">
+                                <label class="form-check-label">滷蛋</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" name="extras" value="豆干">
+                                <label class="form-check-label">豆干</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" name="extras" value="高麗菜">
+                                <label class="form-check-label">高麗菜</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" name="extras" value="玉米">
+                                <label class="form-check-label">玉米</label>
+                            </div>
+                        </div>
+
+                        <!-- 6. 取餐方式 -->
+                        <div class="mb-3">
+                            <div class="h6 mb-2">取餐方式</div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input" name="takeway" value="自取" checked>
+                                <label class="form-check-label">自取</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input" name="takeway" value="外送">
+                                <label class="form-check-label">外送</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input" name="takeway" value="叫 Uber">
+                                <label class="form-check-label">叫 Uber</label>
+                            </div>
+                        </div>
+
+                        <!-- 7. 餐點狀態 switch -->
+                        <div class="mb-3">
+                            <div class="h6 mb-2">餐點狀態（是否加辣）</div>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" id="spicy_switch" class="form-check-input">
+                                <label class="form-check-label" id="spicy_label">不辣</label>
+                            </div>
+                        </div>
+
+                        <!-- 8. 搜尋 input-group -->
+                        <div class="mb-3">
+                            <label class="form-label">搜尋菜名（示範 input-group）</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search_text" placeholder="輸入想查詢的菜名">
+                                <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+                            </div>
+                            <div class="form-text">此欄僅作為版型示範，不影響驗證。</div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
+                        <div class="btn-bar text-end">
+                            <button class="btn btn-primary me-2" id="ok_btn_01">Confirm</button>
+                            <button class="btn btn-secondary" id="btn_clear">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右：訂單資料區 -->
+            <div class="col-md-5 col-xxl-4">
+                <div class="card summary-card shadow-soft mt-4 mt-md-0">
+                    <div class="card-header text-white">
+                        <div class="title-main fw-900">訂單資料區</div>
+                        <small class="subtitle text-white-50">Step 2 · 確認內容</small>
+                    </div>
+                    <div class="card-body" id="showdata">
+                        <div class="h5"><span fw-900>Product Name: </span></div>
+                        <div class="h5"><span fw-900>Price: </span></div>
+                        <div class="h5"><span fw-900>Main Food: </span></div>
+                        <div class="h5"><span fw-900>Amount: </span></div>
+                        <div class="h5"><span fw-900>Extras: </span></div>
+                        <div class="h5"><span fw-900>Takeway: </span></div>
+                        <div class="h5"><span fw-900>Spicy: </span></div>
+                        <div class="h5"><span fw-900>Search Keyword: </span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // 驗證旗標
+        var flag_name = false;
+        var flag_price = false;
+        var flag_main = false;
+        var flag_amount = true; // range 一開始給預設值就算有效
+
+        // 加辣狀態
+        var spicyStatus = "不辣";
+
+        $(function () {
+            // 初始化 range 顯示
+            $("#amount_text").text($("#amount_range").val());
+
+            // 1. 菜名驗證：2~10 字
+            $("#dish_name").on("input", function () {
+                let len = $(this).val().length;
+                if (len >= 2 && len <= 10) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                    flag_name = true;
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                    flag_name = false;
+                }
+            });
+
+            // 2. 價格驗證：60~200 且不可為 0
+            $("#price").on("input", function () {
+                let v = Number($(this).val());
+                if (v >= 60 && v <= 200) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                    flag_price = true;
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                    flag_price = false;
+                }
+            });
+
+            // 3. 主食驗證
+            $("#main_food").on("change", function () {
+                if ($(this).val() !== "") {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                    flag_main = true;
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                    flag_main = false;
+                }
+            });
+
+            // 4. 分量 range 同步顯示數字
+            $("#amount_range").on("input", function () {
+                $("#amount_text").text($(this).val());
+                flag_amount = true;
+            });
+
+            // 7. 加辣 switch
+            $("#spicy_switch").on("change", function () {
+                if ($(this).is(":checked")) {
+                    spicyStatus = "要辣";
+                } else {
+                    spicyStatus = "不辣";
+                }
+                $("#spicy_label").text(spicyStatus);
+            });
+
+            // 8. 搜尋按鈕示範
+            $("#btn_search").on("click", function () {
+                let key = $("#search_text").val().trim();
+                if (key === "") {
+                    Swal.fire({
+                        title: "搜尋菜名",
+                        text: "請先輸入想查詢的菜名。",
+                        icon: "info"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "搜尋菜名",
+                        text: "您查詢的是：「" + key + "」",
+                        icon: "success"
+                    });
+                }
+            });
+
+            // Cancel 按鈕：清空表單
+            $("#btn_clear").on("click", function () {
+                $("#dish_name").val('').removeClass('is-valid').addClass('is-invalid');
+                $("#price").val('').removeClass('is-valid').addClass('is-invalid');
+                $("#main_food").val('').removeClass('is-valid').addClass('is-invalid');
+                $("#amount_range").val(50);
+                $("#amount_text").text(50);
+
+                $("input[name='extras']").prop('checked', false);
+                $("input[name='takeway'][value='自取']").prop('checked', true);
+
+                $("#spicy_switch").prop('checked', false);
+                spicyStatus = "不辣";
+                $("#spicy_label").text(spicyStatus);
+
+                $("#search_text").val('');
+
+                flag_name = false;
+                flag_price = false;
+                flag_main = false;
+                flag_amount = true;
+            });
+
+            // Confirm：檢查並顯示訂單資料
+            $("#ok_btn_01").on("click", function () {
+                if (flag_name && flag_price && flag_main && flag_amount) {
+                    // 收集資料
+                    let dishName = $("#dish_name").val();
+                    let price = $("#price").val();
+                    let mainFood = $("#main_food").val();
+                    let amount = $("#amount_range").val() + "%";
+
+                    // 加購配料
+                    let extrasList = [];
+                    $.each($("input[name='extras']:checked"), function () {
+                        extrasList.push($(this).val());
+                    });
+                    let extrasText = extrasList.join("、");
+                    if (extrasText === "") extrasText = "無";
+
+                    // 取餐方式
+                    let takeway = $("input[name='takeway']:checked").val();
+
+                    // 搜尋關鍵字
+                    let searchKey = $("#search_text").val().trim();
+
+                    Swal.fire({
+                        title: "Success!",
+                        text: "您的便當訂單已送出！",
+                        icon: "success"
+                    });
+
+                    // 顯示在右邊卡片
+                    let strHTML = `
+                        <div class="h5"><span fw-900>Product Name: </span> <span class="text-danger">${dishName}</span></div>
+                        <div class="h5"><span fw-900>Price: </span> <span class="text-danger">${price}</span></div>
+                        <div class="h5"><span fw-900>Main Food: </span> <span class="text-danger">${mainFood}</span></div>
+                        <div class="h5"><span fw-900>Amount: </span> <span class="text-danger">${amount}</span></div>
+                        <div class="h5"><span fw-900>Extras: </span> <span class="text-danger">${extrasText}</span></div>
+                        <div class="h5"><span fw-900>Takeway: </span> <span class="text-danger">${takeway}</span></div>
+                        <div class="h5"><span fw-900>Spicy: </span> <span class="text-danger">${spicyStatus}</span></div>
+                        <div class="h5"><span fw-900>Search Keyword: </span> <span class="text-danger">${searchKey}</span></div>
+                    `;
+                    $("#showdata").html(strHTML);
+
+                } else {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "必填欄位填寫不正確，請再檢查一次。",
+                        icon: "error"
+                    });
+                }
+            });
+        });
+
+         checkLoginStatus();
+
+        function checkLoginStatus() {
+            let token = localStorage.getItem("uid");
+            if (!token) {
+
+                Swal.fire({
+                    title: "Not Login?",
+                    text: "Back to Homepage to Sing in",
+                    icon: "question"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.open("20251118-project - for python mysql.html")
+                    }
+
+                })
+                return;
+            }
+            axios.get('http://127.0.0.1:5000/api/me', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(function (response) {
+                    console.log(response);
+
+                    //改成用一個function
+                    setLoginUI(response.data.username)
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+
+        }
+
+        function setLoginUI(username) {
+
+            //Show logined info for member
+            $("#s02-member-span").removeClass("d-none");
+            $("#s02-member-span").html(`會員:<span class="text-03 fw-900 h2 text-white">${username}</span>`);
+            //show sign out button
+            $("#s02-logout-btn").removeClass("d-none");
+            
+
+        }
+
+
+        //Logout Button
+        $("#s02-logout-btn").on("click", function () {
+
+            clearLoginUI()
+            //clear localStorage
+            localStorage.removeItem("uid")
+
+            window.open("20251118-project - for python mysql.html")
+
+        })
+
+        function clearLoginUI() {
+
+            //remove logined info for member
+            $("#s02-member-span").addClass("d-none");
+            //remove sign out button
+            $("#s02-logout-btn").addClass("d-none");
+            //remove control center button
+            $("#s02-control-panel-btn").addClass("d-none");
+
+
+        }
+
+    </script>
+</body>
+
+</html>

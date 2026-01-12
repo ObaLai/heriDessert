@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chartjs-全國各縣市旅館分布分析報表</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/table-rwd.css">
+    <link rel="stylesheet" href="css/all.min.css">
+
+</head>
+
+<body class="bg-cover">
+    <header class="bg-cover" style="background-image: url(images/landscape1.avif); height: 280px;">
+        <div class="display-4 fw-900 text-white pt-5 ps-4">全國各縣市旅館分布報表</div>
+    </header>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <select name="" id="citySelect" class="form-select form-select-lg" style="margin-top: -25px;">
+                    <option value="" selected disabled>---選擇縣市名稱---</option>
+                </select>
+
+            </div>
+        </div>
+        <div>
+            <div class="col-8">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var myChart = null;
+        var hotelData = []
+
+
+        $(async function () {
+            await init();
+            console.log(hotelData);
+            drawSelectCity();
+
+            $("#citySelect").on("change", function () {
+                const city = $(this).val();
+
+                let regionTitle = [];
+                let counter = [];
+                let regionData = [];
+
+                //1.過濾該縣市資料
+                //2.使用該縣市'鄉鎮區'資料重構
+                hotelData.forEach((item) => {
+                    if (item.PostalAddress.City == city) {
+                        let town = item.PostalAddress.Town;
+                        if (counter[town] == undefined) {
+                            counter[town] = regionData.length;
+                            regionData.push(new Array());
+                            regionTitle[counter[town]] = town;
+                        }
+                        regionData[counter[town]].push(item);
+                    }
+                });
+
+                console.log(counter);
+                console.log(regionData);
+                console.log(regionTitle);
+
+                //產生圖表
+                const labels = regionTitle
+                const data = regionData.map(arr => arr.length)
+                drawChart(labels, data, type = 'bar')
+
+
+            })
+        })
+
+
+
+        async function init() {
+            await getData();
+        }
+
+        function getData() {
+            return axios.get('js/json/HotelList.json')
+                .then(function (response) {
+                    console.log(response);
+                    hotelData = response.data.Hotels;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+        }
+
+        //Country List
+        function drawSelectCity() {
+
+            return axios.get('js/json/CityCountyData.json')
+                .then(function (response) {
+                    console.log(response);
+                    $("#citySelect").empty();
+                    $("#citySelect").append(`<option value="" selected disabled>---選擇縣市名稱---</option>`);
+                    response.data.forEach((item) => {
+                        var strHTML = `<option value="${item.CityName}">${item.CityName} </option>`;
+                        $("#citySelect").append(strHTML);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+
+        }
+
+        const barColors = [
+            'rgba(255, 99, 132, 0.7)',   // 紅
+            'rgba(255, 159, 64, 0.7)',   // 橘
+            'rgba(255, 205, 86, 0.7)',   // 黃
+            'rgba(75, 192, 192, 0.7)',   // 青
+            'rgba(54, 162, 235, 0.7)',   // 藍
+            'rgba(153, 102, 255, 0.7)',  // 紫
+            'rgba(201, 203, 207, 0.7)',  // 灰
+
+            'rgba(255, 120, 120, 0.7)',  // 淡紅
+            'rgba(255, 180, 120, 0.7)',  // 淡橘
+            'rgba(255, 220, 120, 0.7)',  // 淡黃
+            'rgba(120, 220, 220, 0.7)',  // 淡青
+            'rgba(120, 180, 255, 0.7)',  // 淡藍
+            'rgba(180, 150, 255, 0.7)',  // 淡紫
+            'rgba(160, 160, 160, 0.7)',  // 深灰
+
+            'rgba(255, 90, 90, 0.7)',    // 深紅
+            'rgba(255, 140, 0, 0.7)',    // 深橘
+            'rgba(255, 200, 0, 0.7)',    // 深黃
+            'rgba(0, 200, 150, 0.7)',    // 綠青
+            'rgba(0, 130, 200, 0.7)',    // 深藍
+            'rgba(130, 90, 200, 0.7)'    // 深紫
+        ];
+
+
+        function drawChart(labels, data, type = 'line') {
+            const ctx = document.getElementById('myChart');
+            //avoid ram overloading
+            if (myChart) {//if my chart exists
+                myChart.destroy();
+            }
+            myChart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '統計圖',
+                        data: data,
+                        backgroundColor: barColors.slice(0, data.length),
+                        borderColor: barColors.slice(0, data.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        checkLoginStatus();
+
+        function checkLoginStatus() {
+            let token = localStorage.getItem("uid");
+            if (!token) {
+
+                Swal.fire({
+                    title: "Not Login?",
+                    text: "Back to Homepage to Sing in",
+                    icon: "question"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.open("20251118-project - for python mysql.html")
+                    }
+
+                })
+                return;
+            }
+            axios.get('http://127.0.0.1:5000/api/me', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(function (response) {
+                    console.log(response);
+
+                    //改成用一個function
+                    setLoginUI(response.data.username)
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+
+        }
+    </script>
+</body>
+
+</html>
